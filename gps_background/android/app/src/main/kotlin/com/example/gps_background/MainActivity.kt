@@ -10,18 +10,34 @@ class MainActivity: FlutterActivity() {
         private const val CHANNEL_NAME = "native_channel"
     }
 
-    private val serviceStarter = ServiceStarter()
+    private var channel: MethodChannel? = null
+    private var serviceStarter: ServiceStarter? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_NAME).setMethodCallHandler { call, result ->
+        serviceStarter = ServiceStarter(context) {
+            channel?.invokeMethod("locationCallback", it, null)
+        }
+
+        channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_NAME)
+        channel?.setMethodCallHandler { call, result ->
             when(call.method) {
                 START_SERVICE -> {
-                    serviceStarter.startService()
+                    println("Start")
+                    serviceStarter?.startService()
+                }
+                STOP_SERVICE -> {
+                    println("Stop")
+                    serviceStarter?.stopService()
                 }
                 else -> { result.notImplemented() }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceStarter?.stopService()
     }
 }
