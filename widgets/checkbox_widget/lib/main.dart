@@ -28,11 +28,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _checkBoxValue = false;
+  bool _firstCheckBoxValue = false;
+  bool _secondCheckBoxValue = false;
+  bool _tripleState = false;
+  bool _listTileState = false;
+  String _stringState = false.toString();
 
-  void _checkBoxValueChange(bool newValue) {
+  void _firstCheckBoxValueChange(bool newValue) {
     setState(() {
-      _checkBoxValue = newValue;
+      _firstCheckBoxValue = newValue;
+    });
+  }
+
+  void _secondCheckBoxValueChange(bool newValue) {
+    setState(() {
+      _secondCheckBoxValue = newValue;
+    });
+  }
+
+  void _tripleCheckBoxValueChange(bool newValue) {
+    setState(() {
+      _tripleState = newValue;
+      _stringState = "Triple state : ${_tripleState.toString()}"; 
     });
   }
 
@@ -46,7 +63,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Checkbox(value: _checkBoxValue, onChanged: _checkBoxValueChange)
+            Text(_stringState),
+            Checkbox(value: _tripleState, onChanged: _tripleCheckBoxValueChange, tristate: true),            
+            Checkbox(value: _firstCheckBoxValue, onChanged: _firstCheckBoxValueChange),
+            Checkbox(
+              activeColor: Colors.red,
+              checkColor: Colors.blueGrey,
+              hoverColor: Colors.yellow,              
+              value: _secondCheckBoxValue, 
+              onChanged: _secondCheckBoxValueChange
+            ),
+            CheckboxListTile(
+              value: _listTileState, 
+              onChanged: (bool value) {
+                setState(() {
+                  _listTileState = value;
+                });
+              },
+              title: Text("Checkbox Title"),
+              controlAffinity: ListTileControlAffinity.trailing,
+              secondary: Icon(Icons.access_alarms),
+            )
           ],
         ),
       ),
