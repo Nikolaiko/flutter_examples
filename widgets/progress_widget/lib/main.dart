@@ -6,7 +6,7 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {  
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,17 +36,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    super.initState();    
+    super.initState();
   }
 
   void _loadingProgress(Timer timer) {
     setState(() {
-        _progress = _progress + 10;   
-        if (_progress >= 100) {
-          _isLoading = false;
-          timer.cancel();
-        }
-      });
+      _progress = _progress + 10;
+      if (_progress >= 100) {
+        _isLoading = false;
+        _progress = 0;
+        timer.cancel();
+      }
+    });
   }
 
   void _startLoading() {
@@ -73,11 +74,23 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_progress',
               style: Theme.of(context).textTheme.headline4,
             ),
+            CircularProgressIndicator(
+                value: (_progress / 100),
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+                backgroundColor: Colors.black,
+                semanticsLabel: "Label",
+                semanticsValue: "Value"),
+            LinearProgressIndicator(
+                value: (_progress / 100),
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+                backgroundColor: Colors.black,
+                semanticsLabel: "Label",
+                semanticsValue: "Value")
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _isLoading ? null : _startLoading,        
+        onPressed: _isLoading ? null : _startLoading,
         child: Icon(Icons.add),
       ),
     );
